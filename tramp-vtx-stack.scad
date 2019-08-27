@@ -2,7 +2,7 @@
 BASE_WIDTH = 37.0;      // [16:0.5:40]
 BASE_HEIGHT = 37.0;     // [16:0.5:40]
 BASE_THICKNESS = 1;     // [0.1:0.1:4]
-BASE_TYPE = 1;          // [0, 1]
+VENTS = true;           // [true, false]
 
 /* [MOUNTING] */
 HOLE_DIAMETER = 3.6;    // [2, 2.5, 3, 3.5] //3.1 is to small, 3.3 not yet ok
@@ -46,36 +46,19 @@ module vtx_support(){
 
 
 module base_with_holes(base_thickness){
-    difference(){
-        if(BASE_TYPE==0){
-            base();
-        }
-        if(BASE_TYPE==0){
-            //Should be lighter and have more cutouts
-            //front_vent();   
-            side_vents();  
-        }        
-        
-        
-        if(BASE_TYPE==1){
-            base2();
-        }
+    difference(){        
+        base();
 
-
+        if(VENTS){
+            middle_vents();                
+        }
         
-        middle_vents();                
         holes_group();        
     }
 }
 
 module base(){
-    rounded_corners(BASE_WIDTH, BASE_HEIGHT, BASE_THICKNESS, CORNERS_DIAMETER);
-
-}
-
-module base2(){
-    // unified base
-    y_offset = 21;
+    y_offset = BASE_HEIGHT/2 + 9;
     
     difference(){
         rounded_corners(BASE_WIDTH, BASE_HEIGHT, BASE_THICKNESS, CORNERS_DIAMETER);
@@ -89,8 +72,8 @@ module base2(){
 }
 
 module cutout(){
-    size = 14;
-    rounded_corners(BASE_WIDTH-size, BASE_HEIGHT-size, BASE_THICKNESS*2, CORNERS_DIAMETER);    
+    size = 18;
+    rounded_corners(BASE_WIDTH-size, BASE_HEIGHT, BASE_THICKNESS*2, CORNERS_DIAMETER);    
 }
 
 module middle_vents(){
@@ -105,70 +88,26 @@ module middle_vents(){
     }
 }
 
-module side_vents(){
-    y_offset = 14;    
-    height = 10;    
-
-    width = 11.5;
-    x_offset = 5.1;
-
-    width_2 = 5.8;
-    x_offset_2 = -7.7;
-    
-    y_offset_3 = 18;
-    width_3 = 8;
-    x_offset_3 = -3.3;    
-    
-    translate([x_offset,y_offset,0])
-    cube([width, height, BASE_THICKNESS*2], true);          
-    
-    translate([x_offset,-y_offset,0])
-    cube([width, height, BASE_THICKNESS*2], true);       
-    
-    
-    translate([x_offset_2,y_offset,0])
-    cube([width_2, height, BASE_THICKNESS*2], true);          
-    
-    translate([x_offset_2,-y_offset,0])
-    cube([width_2, height, BASE_THICKNESS*2], true);       
-    
-    
-    translate([x_offset_3,y_offset_3,0])
-    cube([width_3, height, BASE_THICKNESS*2], true);          
-    
-    translate([x_offset_3,-y_offset_3,0])
-    cube([width_3, height, BASE_THICKNESS*2], true);         
-}
-
-module front_vent(){
-    width = 9;
-    x_offset = BASE_WIDTH/2 - width/2 + 0.1;
-    height = BASE_HEIGHT - 2*HOLE_DIAMETER - 4;
-
-    translate([-x_offset, 0, 0])
-    cube([width, height, BASE_THICKNESS*2], true);
-}
-
 module holes_group(){
     x_offset = HOLE_X_OFFSET/2;
     y_offset = HOLE_Y_OFFSET/2;
-    thickness = (BASE_THICKNESS+SUPPORT_THICKNESS)*2;
-    diameter = HOLE_DIAMETER;
     
     translate([x_offset,y_offset,0])
-    cylinder_hole(diameter, thickness);
+    cylinder_hole();
     
     translate([x_offset,-y_offset,0])
-    cylinder_hole(diameter, thickness);
+    cylinder_hole();
 
     translate([-x_offset,-y_offset,0])
-    cylinder_hole(diameter, thickness);
+    cylinder_hole();
 
     translate([-x_offset,y_offset,0])
-    cylinder_hole(diameter, thickness);
+    cylinder_hole();
 }
 
-module cylinder_hole(diameter, thickness){
+module cylinder_hole(){
+    thickness = (BASE_THICKNESS+SUPPORT_THICKNESS)*2;
+    diameter = HOLE_DIAMETER;    
     cylinder(thickness, diameter/2, diameter/2, true);            
 }
 
@@ -251,8 +190,7 @@ module rounded_corners(width, height, depth, corner_curve){
 module secure_mount(thickness){
     diff = (thickness-MOUNT_HOLE_THICKNESS)/2 - MOUNT_Z_OFFSET;
     difference(){
-        cube([MOUNT_WIDTH, MOUNT_HEIGHT, thickness], true);
-//        rounded_corners(MOUNT_WIDTH, MOUNT_HEIGHT, thickness, CORNERS_DIAMETER);              
+        cube([MOUNT_WIDTH, MOUNT_HEIGHT, thickness], true);          
         
         translate([0,0, diff])
         cube([MOUNT_HOLE_WIDTH, MOUNT_HEIGHT*2, MOUNT_HOLE_THICKNESS], true);        
