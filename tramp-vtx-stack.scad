@@ -1,5 +1,5 @@
 /* [BASE] */
-BASE_WIDTH = 37.0;      // [16:0.5:40]
+BASE_WIDTH = 38.0;      // [16:0.5:40]
 BASE_HEIGHT = 37.0;     // [16:0.5:40]
 BASE_THICKNESS = 1;     // [0.1:0.1:4]
 VENTS = true;           // [true, false]
@@ -19,7 +19,7 @@ MOUNT_Z_OFFSET = 1;
 SUPPORT_WIDTH = 17.4;
 SUPPORT_HEIGHT = 17.4;
 SUPPORT_THICKNESS = 2.5;    // [3:0.1:5]
-SUPPORT_X_OFFSET = 4.0;     // previously 2.0
+SUPPORT_X_OFFSET = 4.5;     // previously 2.0
 LIMITER_THICKNESS = SUPPORT_THICKNESS + 1.5;
 LIMITER_DIAMETER = 4;
 
@@ -72,7 +72,7 @@ module base(){
 }
 
 module cutout(){
-    size = 18;
+    size = 15;
     rounded_corners(BASE_WIDTH-size, BASE_HEIGHT, BASE_THICKNESS*2, CORNERS_DIAMETER);    
 }
 
